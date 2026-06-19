@@ -79,8 +79,10 @@ The API key has been added to Vercel Production as `DEEPSEEK_API_KEY`.
 Optional model override:
 
 ```txt
-DEEPSEEK_BUG_REPORT_MODEL=deepseek-chat
+DEEPSEEK_BUG_REPORT_MODEL=deepseek-v4-flash
 ```
+
+The default code path uses `deepseek-v4-flash` with `thinking: { type: 'disabled' }`. This is the lowest-cost/lowest-latency thinking setting for bug report cleanup. DeepSeek's `reasoning_effort` only applies when thinking is enabled; `low` and `medium` are mapped to `high`, so disabling thinking is the actual minimum.
 
 ### Vercel
 
@@ -117,7 +119,7 @@ DEEPSEEK_API_KEY
 Optional:
 
 ```txt
-DEEPSEEK_BUG_REPORT_MODEL=deepseek-chat
+DEEPSEEK_BUG_REPORT_MODEL=deepseek-v4-flash
 ```
 
 Production env vars were also pulled into ignored `.env.local`. The previous local file was backed up to an ignored `.env.local.backup-*` file.
@@ -170,7 +172,7 @@ Everything that can be made repeatable in this repo has been moved into `supabas
 : Downloads Tally file upload URLs, validates MIME type and size, copies accepted images to Supabase Storage, inserts `bug_report_attachments` metadata, and creates signed URLs for GitHub issue links.
 
 `deepseek.ts`
-: Sends normalized report data to DeepSeek, validates the JSON response with `zod`, clamps labels/title/severity, and falls back to raw normalized fields when DeepSeek is unavailable or returns invalid JSON.
+: Stores the DeepSeek prompt, sends normalized report data to `deepseek-v4-flash` with thinking disabled, validates the JSON response with `zod`, clamps labels/title/severity, and falls back to raw normalized fields when DeepSeek is unavailable or returns invalid JSON.
 
 `github.ts`
 : Formats the final GitHub issue body and creates the issue using the GitHub REST API.

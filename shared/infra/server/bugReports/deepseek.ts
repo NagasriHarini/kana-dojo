@@ -34,7 +34,7 @@ const CleanedBugReportSchema = z.object({
 });
 
 const DEEPSEEK_TIMEOUT_MS = 12000;
-const DEEPSEEK_MODEL = 'deepseek-chat';
+const DEEPSEEK_MODEL = 'deepseek-v4-flash';
 
 const DEEPSEEK_PROMPT = `You are formatting user-submitted bug reports for the KanaDojo GitHub issue tracker.
 
@@ -146,6 +146,7 @@ export async function formatBugReportWithDeepSeek(
     },
     body: JSON.stringify({
       model: process.env.DEEPSEEK_BUG_REPORT_MODEL || DEEPSEEK_MODEL,
+      thinking: { type: 'disabled' },
       response_format: { type: 'json_object' },
       messages: [
         { role: 'system', content: DEEPSEEK_PROMPT },
